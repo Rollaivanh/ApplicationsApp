@@ -2,4 +2,7 @@
 
 import { Postulation } from '@prisma/client';
 
-export type CreatePostulacioneDto = Omit<Postulation, 'id' | 'updatedAt'>;
+export type CreatePostulacioneDto = Omit<
+  Postulation,
+  'id' | 'updatedAt' | 'createdAt'
+>;

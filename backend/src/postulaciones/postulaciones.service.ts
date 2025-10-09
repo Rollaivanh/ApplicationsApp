@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CreatePostulacioneDto } from './dto/create-postulacione.dto';
 import { UpdatePostulacioneDto } from './dto/update-postulacione.dto';
@@ -18,13 +19,17 @@ export class PostulacionesService {
         data: createPostulacioneDto,
       });
     } catch (error) {
+      console.error('🔥 Prisma error:', error); // <-- log completo
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new ConflictException(
-            `Postulacion with name ${createPostulacioneDto.empresa} alredy exist `,
+            `Postulación con empresa "${createPostulacioneDto.empresa}" ya existe.`,
           );
         }
       }
+
+      // Lanzamos el mensaje real para leerlo desde el frontend
+      throw new InternalServerErrorException(error.message);
     }
   }
 
