@@ -1,21 +1,32 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { createPostulation } from "../postulations.api";
-import { useRouter } from "next/navigation";
-export function PostulationForm() {
-  const { register, handleSubmit, reset } = useForm();
+import { createPostulation, updatePostulation } from "../postulations.api";
+import { useParams, useRouter } from "next/navigation";
+
+export function PostulationForm({ postulation }: any) {
+  console.log(postulation);
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      empresa: postulation.empresa,
+      puesto: postulation.puesto,
+      descripcion: postulation.descripcion,
+      link: postulation.link,
+      image: postulation.image,
+      interviewAt: postulation.interviewAt,
+    },
+  });
   const router = useRouter();
+  const params = useParams<{ id: string }>();
+
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      await createPostulation(data);
-      reset();
-      alert(" Postulación creada correctamente");
-    } catch (err) {
-      alert(" Error al crear la postulación");
+    if (params?.id) {
+      await updatePostulation(params.id, { ...data });
+    } else {
+      await createPostulation({ ...data });
     }
     router.push("/");
   });
@@ -52,9 +63,7 @@ export function PostulationForm() {
         <Input type="date" {...register("interviewAt")} />
       </div>
 
-      <button type="submit" className={buttonVariants()}>
-        Guardar postulación
-      </button>
+      <Button>{params.id ? "Editar" : "Crear"}</Button>
     </form>
   );
 }

@@ -13,8 +13,14 @@ export function PostulationCard({ postulation }: { postulation: any }) {
     await deletePostulation(id);
     router.refresh();
   }
+
   return (
-    <Card>
+    <Card
+      onClick={() => {
+        router.push(`/postulations/${postulation.id}`);
+      }}
+      className="cursor-pointer hover:shadow-md transition"
+    >
       <CardHeader>
         <CardTitle>
           <p className="font-semibold text-lg">{postulation.empresa}</p>
@@ -22,14 +28,36 @@ export function PostulationCard({ postulation }: { postulation: any }) {
         <p className="text-sm text-gray-600">{postulation.puesto}</p>
       </CardHeader>
 
-      <CardContent className="flex justify-between p-4 space-y-2">
+      <CardContent className="flex flex-col gap-2 p-4">
         {postulation.interviewAt && (
-          <p className="text-xs text-gray-500 flex justify-end">
-            Entrevista: {new Date(postulation.interviewAt).toLocaleDateString()}
+          <p className="text-xs text-gray-500 self-end">
+            Entrevista:{" "}
+            {new Date(postulation.interviewAt).toLocaleDateString("es-AR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}
           </p>
         )}
-        <div>
-          <Button onClick={() => handleRemovePostulatition(postulation.id)}>
+
+        <div className="flex justify-end gap-2 mt-2">
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/postulations/${postulation.id}/edit`);
+            }}
+            variant="secondary"
+          >
+            Editar
+          </Button>
+
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemovePostulatition(postulation.id);
+            }}
+            variant="destructive"
+          >
             Eliminar
           </Button>
         </div>
