@@ -11,17 +11,18 @@ export async function getPostulation(id: string) {
 }
 
 export async function createPostulation(postulationData: any) {
-  const formattedData = {
+  const payload = {
     ...postulationData,
-    interviewAt: postulationData.interviewAt
-      ? new Date(`${postulationData.interviewAt}T00:00:00Z`).toISOString()
-      : null,
+    interviewAt:
+      postulationData.interviewAt && postulationData.interviewAt.trim() !== ""
+        ? `${postulationData.interviewAt}T00:00:00.000Z`
+        : new Date().toISOString(), // 🔹 Si no la elige, usa fecha actual
   };
 
   const res = await fetch("http://localhost:4000/api/postulations", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formattedData),
+    body: JSON.stringify(payload),
   });
 
   const data = await res.json();

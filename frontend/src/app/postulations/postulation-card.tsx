@@ -25,21 +25,23 @@ export function PostulationCard({ postulation }: { postulation: any }) {
         <CardTitle>
           <p className="font-semibold text-lg">{postulation.empresa}</p>
         </CardTitle>
-        <p className="text-sm text-gray-600">{postulation.puesto}</p>
-      </CardHeader>
 
-      <CardContent className="flex flex-col gap-2 p-4">
-        {postulation.interviewAt && (
-          <p className="text-xs text-gray-500 self-end">
-            Entrevista:{" "}
-            {new Date(postulation.interviewAt).toLocaleDateString("es-AR", {
+        <p className="text-sm text-gray-600">{postulation.puesto}</p>
+
+        {/* 🔹 Fecha de creación */}
+        {postulation.createdAt && (
+          <p className="text-sm text-gray-500 mt-1">
+            Creada el:{" "}
+            {new Date(postulation.createdAt).toLocaleDateString("es-AR", {
               day: "2-digit",
               month: "long",
               year: "numeric",
             })}
           </p>
         )}
+      </CardHeader>
 
+      <CardContent className="flex flex-col gap-2 p-4">
         <div className="flex justify-end gap-2 mt-2">
           <Button
             onClick={(e) => {

@@ -58,11 +58,6 @@ export function PostulationForm({ postulation }: any) {
         <Input {...register("image")} />
       </div>
 
-      <div>
-        <Label>Fecha de entrevista</Label>
-        <Input type="date" {...register("interviewAt")} />
-      </div>
-
       <Button>{params.id ? "Editar" : "Crear"}</Button>
     </form>
   );
