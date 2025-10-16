@@ -1,64 +1,107 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { createPostulation, updatePostulation } from "../postulations.api";
-import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { Step1InfoBasica } from "../steps/Step1InfoBasica";
+import { Step2EstadoFecha } from "../steps/Step2EstadoFecha";
+import { Step3InfoExtra } from "../steps/Step3InfoExtra";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { createPostulation } from "../postulations.api";
 
-export function PostulationForm({ postulation }: any) {
-  console.log(postulation);
-  const { register, handleSubmit, reset } = useForm({
+export function FormularioPostulacion({ postulacion }: { postulacion?: any }) {
+  const [paso, setPaso] = useState(1);
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
-      empresa: postulation.empresa,
-      puesto: postulation.puesto,
-      descripcion: postulation.descripcion,
-      link: postulation.link,
-      image: postulation.image,
-      interviewAt: postulation.interviewAt,
+      empresa: postulacion?.empresa || "",
+      puesto: postulacion?.puesto || "",
+      link: postulacion?.link || "",
+      estado: postulacion?.estado || "",
+      fechaEntrevista: postulacion?.fechaEntrevista || "",
+      descripcion: postulacion?.descripcion || "",
     },
   });
-  const router = useRouter();
-  const params = useParams<{ id: string }>();
 
-  const onSubmit = handleSubmit(async (data) => {
-    if (params?.id) {
-      await updatePostulation(params.id, { ...data });
-    } else {
-      await createPostulation({ ...data });
+  function avanzarPaso() {
+    setPaso((prev) => Math.min(prev + 1, 3));
+  }
+
+  function retrocederPaso() {
+    setPaso((prev) => Math.max(prev - 1, 1));
+  }
+
+  async function onSubmit(data: any) {
+    console.log("✅ Datos completos:", data);
+
+    try {
+      await createPostulation(data); // 👈 Envío real a la API
+      router.push("/postulations/dashboard"); // 👈 Redirección al dashboard
+    } catch (error) {
+      console.error("❌ Error al crear la postulación:", error);
+      alert("Ocurrió un error al guardar la postulación.");
     }
-    router.push("/");
-  });
+  }
 
   return (
-    <form className="space-y-4" onSubmit={onSubmit}>
-      <div>
-        <Label>Nombre de la empresa</Label>
-        <Input {...register("empresa", { required: true })} />
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-6"
+    >
+      <div className="text-lg font-bold text-center">
+        {paso === 1 && "Paso 1: Información básica"}
+        {paso === 2 && "Paso 2: Estado y entrevista"}
+        {paso === 3 && "Paso 3: Información adicional"}
       </div>
 
-      <div>
-        <Label>Puesto</Label>
-        <Input {...register("puesto", { required: true })} />
-      </div>
+      {paso === 1 && (
+        <Step1InfoBasica
+          postulacion={postulacion}
+          register={register}
+          errors={errors}
+        />
+      )}
+      {paso === 2 && (
+        <Step2EstadoFecha
+          postulacion={postulacion}
+          register={register}
+          errors={errors}
+          watch={watch}
+          setValue={setValue}
+        />
+      )}
+      {paso === 3 && (
+        <Step3InfoExtra
+          postulacion={postulacion}
+          register={register}
+          errors={errors}
+        />
+      )}
 
-      <div>
-        <Label>Descripción</Label>
-        <Input {...register("descripcion")} />
-      </div>
+      <div className="flex justify-between">
+        {paso > 1 ? (
+          <Button type="button" variant="outline" onClick={retrocederPaso}>
+            Anterior
+          </Button>
+        ) : (
+          <div />
+        )}
 
-      <div>
-        <Label>Link de la oferta</Label>
-        <Input {...register("link")} />
+        {paso < 3 ? (
+          <Button type="button" onClick={avanzarPaso}>
+            Siguiente
+          </Button>
+        ) : (
+          <Button type="submit">Guardar postulación</Button>
+        )}
       </div>
-
-      <div>
-        <Label>Imagen (logo o referencia)</Label>
-        <Input {...register("image")} />
-      </div>
-
-      <Button>{params.id ? "Editar" : "Crear"}</Button>
     </form>
   );
 }

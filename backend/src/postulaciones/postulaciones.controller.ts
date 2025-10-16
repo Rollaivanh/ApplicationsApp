@@ -27,6 +27,10 @@ export class PostulacionesController {
   findAll() {
     return this.postulacionesService.findAll();
   }
+  @Get('metrics')
+  getMetrics() {
+    return this.postulacionesService.getMetrics();
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

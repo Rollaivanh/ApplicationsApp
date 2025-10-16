@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { PostulationForm } from "./postulation-form";
+import { FormularioPostulacion } from "./postulation-form";
 import { getPostulation } from "../postulations.api";
 
 interface Props {
@@ -21,7 +21,7 @@ export default async function PostulationsNewPage({ params }: Props) {
         </CardHeader>
 
         <CardContent className="p-8">
-          <PostulationForm postulation={postulation} />
+          <FormularioPostulacion postulacion={postulation} />
         </CardContent>
       </Card>
     </div>

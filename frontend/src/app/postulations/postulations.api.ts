@@ -1,8 +1,27 @@
 export async function getPostulations() {
-  const data = await fetch("http://localhost:4000/api/postulations", {
-    cache: "no-store",
-  });
-  return data.json();
+  try {
+    const res = await fetch("http://localhost:4000/api/postulations", {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("❌ Error al obtener postulaciones:", errorText);
+      return [];
+    }
+
+    const data = await res.json();
+
+    if (!Array.isArray(data)) {
+      console.warn("⚠️ Respuesta inesperada de postulations:", data);
+      return [];
+    }
+
+    return data;
+  } catch (error) {
+    console.error("❌ Error de red o parsing en getPostulations:", error);
+    return [];
+  }
 }
 
 export async function getPostulation(id: string) {
@@ -13,10 +32,11 @@ export async function getPostulation(id: string) {
 export async function createPostulation(postulationData: any) {
   const payload = {
     ...postulationData,
-    interviewAt:
-      postulationData.interviewAt && postulationData.interviewAt.trim() !== ""
-        ? `${postulationData.interviewAt}T00:00:00.000Z`
-        : new Date().toISOString(), // 🔹 Si no la elige, usa fecha actual
+    fechaEntrevista:
+      postulationData.fechaEntrevista &&
+      postulationData.fechaEntrevista.trim() !== ""
+        ? new Date(postulationData.fechaEntrevista).toISOString() // ✅ formato válido
+        : null, // ✅ sin fecha -> null
   };
 
   const res = await fetch("http://localhost:4000/api/postulations", {
@@ -46,4 +66,13 @@ export async function updatePostulation(id: string, newPostulation: any) {
     cache: "no-store",
   });
   return await res.json();
+}
+
+export async function getPostulationMetrics() {
+  const res = await fetch("http://localhost:4000/api/postulations/metrics", {
+    cache: "no-store",
+  });
+
+  if (!res.ok) throw new Error("Error al obtener métricas");
+  return res.json();
 }

@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { deletePostulation } from "@/app/postulations/postulations.api";
 import { useRouter } from "next/navigation";
 
@@ -9,7 +10,6 @@ export function PostulationCard({ postulation }: { postulation: any }) {
   const router = useRouter();
 
   async function handleRemovePostulatition(id: any) {
-    console.log(id);
     await deletePostulation(id);
     router.refresh();
   }
@@ -27,6 +27,24 @@ export function PostulationCard({ postulation }: { postulation: any }) {
         </CardTitle>
 
         <p className="text-sm text-gray-600">{postulation.puesto}</p>
+
+        {/* 🔹 Badge de status */}
+        {postulation.status && (
+          <Badge
+            variant={
+              postulation.status === "rechazada"
+                ? "destructive"
+                : postulation.status === "aceptada"
+                ? "success"
+                : postulation.status === "en proceso"
+                ? "secondary"
+                : "pending"
+            }
+            className="mt-1 capitalize"
+          >
+            {postulation.status}
+          </Badge>
+        )}
 
         {/* 🔹 Fecha de creación */}
         {postulation.createdAt && (

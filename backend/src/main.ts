@@ -7,7 +7,7 @@ async function bootstrap() {
 
   // 💡 Agregá esta línea:
   app.enableCors({
-    origin: 'http://localhost:3000', // dominio del frontend
+    origin: 'http://localhost:3000', // dominio del frontendnpm
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
