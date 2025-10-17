@@ -11,8 +11,9 @@ import { Label } from "@/components/ui/label";
 const estados = [
   { label: "Enviada", value: "Enviada" },
   { label: "Entrevista", value: "Entrevista" },
+  { label: "Oferta", value: "Oferta" },
   { label: "Rechazada", value: "Rechazada" },
-  { label: "Aceptada", value: "Aceptada" },
+  { label: "Sin respuesta", value: "SinRespuesta" },
 ];
 
 interface Props {

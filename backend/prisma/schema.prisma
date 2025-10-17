@@ -22,6 +22,7 @@ model Postulacion {
   empresa     String
   puesto      String
   descripcion String?
+  notas       String?
   link        String?
   imagen      String?
   fechaEntrevista DateTime?

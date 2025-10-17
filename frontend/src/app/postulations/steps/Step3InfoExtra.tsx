@@ -31,7 +31,7 @@ export function Step3InfoExtra({ register, postulacion }: Props) {
         <Textarea
           id="notas"
           rows={4}
-          {...register("descripcion")}
+          {...register("notas")}
           placeholder="Recordatorios, contactos, horarios, etc."
         />
       </div>

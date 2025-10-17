@@ -39,11 +39,15 @@ export function FormularioPostulacion({ postulacion }: { postulacion?: any }) {
   }
 
   async function onSubmit(data: any) {
-    console.log("✅ Datos completos:", data);
+    // Si no estamos en el último paso, solo avanzamos sin enviar ni redirigir
+    if (paso < 3) {
+      avanzarPaso();
+      return;
+    }
 
     try {
-      await createPostulation(data); // 👈 Envío real a la API
-      router.push("/postulations/dashboard"); // 👈 Redirección al dashboard
+      await createPostulation(data);
+      router.push("/postulations/dashboard");
     } catch (error) {
       console.error("❌ Error al crear la postulación:", error);
       alert("Ocurrió un error al guardar la postulación.");
@@ -95,9 +99,7 @@ export function FormularioPostulacion({ postulacion }: { postulacion?: any }) {
         )}
 
         {paso < 3 ? (
-          <Button type="button" onClick={avanzarPaso}>
-            Siguiente
-          </Button>
+          <Button type="submit">Siguiente</Button>
         ) : (
           <Button type="submit">Guardar postulación</Button>
         )}

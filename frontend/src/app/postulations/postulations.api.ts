@@ -25,12 +25,12 @@ export async function getPostulations() {
 }
 
 export async function getPostulation(id: string) {
-  const data = await fetch(`http://localhost:4000/api/postulations/ ${id}`);
+  const data = await fetch(`http://localhost:4000/api/postulations/${id}`);
   return data.json();
 }
 
 export async function createPostulation(postulationData: any) {
-  const payload = {
+  const payload: any = {
     ...postulationData,
     fechaEntrevista:
       postulationData.fechaEntrevista &&
@@ -38,6 +38,11 @@ export async function createPostulation(postulationData: any) {
         ? new Date(postulationData.fechaEntrevista).toISOString() // ✅ formato válido
         : null, // ✅ sin fecha -> null
   };
+
+  // Si estado viene vacío, no lo mandamos para que use el default del backend
+  if (!payload.estado) {
+    delete payload.estado;
+  }
 
   const res = await fetch("http://localhost:4000/api/postulations", {
     method: "POST",
@@ -51,14 +56,14 @@ export async function createPostulation(postulationData: any) {
 }
 
 export async function deletePostulation(id: string) {
-  const res = await fetch(`http://localhost:4000/api/postulations/ ${id}`, {
+  const res = await fetch(`http://localhost:4000/api/postulations/${id}`, {
     method: "DELETE",
   });
   return await res.json();
 }
 
 export async function updatePostulation(id: string, newPostulation: any) {
-  const res = await fetch(`http://localhost:4000/api/postulations/ ${id}`, {
+  const res = await fetch(`http://localhost:4000/api/postulations/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
 

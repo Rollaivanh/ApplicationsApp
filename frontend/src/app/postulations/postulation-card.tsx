@@ -19,38 +19,38 @@ export function PostulationCard({ postulation }: { postulation: any }) {
       onClick={() => {
         router.push(`/postulations/${postulation.id}`);
       }}
-      className="cursor-pointer hover:shadow-md transition"
+      className="cursor-pointer hover:shadow-md transition-all border border-muted/30 hover:border-foreground/20 bg-background/60 rounded-xl hover:-translate-y-[1px]"
     >
       <CardHeader>
         <CardTitle>
-          <p className="font-semibold text-lg">{postulation.empresa}</p>
+          <p className="font-semibold text-lg text-foreground/90">{postulation.empresa}</p>
         </CardTitle>
 
-        <p className="text-sm text-gray-600">{postulation.puesto}</p>
+        <p className="text-sm text-muted-foreground">{postulation.puesto}</p>
 
         {/* 🔹 Badge de status */}
-        {postulation.status && (
+        {postulation.estado && (
           <Badge
             variant={
-              postulation.status === "rechazada"
+              postulation.estado === "Rechazada"
                 ? "destructive"
-                : postulation.status === "aceptada"
+                : postulation.estado === "Oferta"
                 ? "success"
-                : postulation.status === "en proceso"
+                : postulation.estado === "Entrevista"
                 ? "secondary"
                 : "pending"
             }
-            className="mt-1 capitalize"
+            className="mt-1 capitalize border-muted/40"
           >
-            {postulation.status}
+            {postulation.estado}
           </Badge>
         )}
 
         {/* 🔹 Fecha de creación */}
-        {postulation.createdAt && (
-          <p className="text-sm text-gray-500 mt-1">
+        {postulation.creadaEn && (
+          <p className="text-sm text-muted-foreground mt-1">
             Creada el:{" "}
-            {new Date(postulation.createdAt).toLocaleDateString("es-AR", {
+            {new Date(postulation.creadaEn).toLocaleDateString("es-AR", {
               day: "2-digit",
               month: "long",
               year: "numeric",
