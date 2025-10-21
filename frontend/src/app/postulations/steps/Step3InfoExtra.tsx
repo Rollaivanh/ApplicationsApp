@@ -1,7 +1,7 @@
 "use client";
 
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { Textarea } from "@/app/postulations/dashboard/components/ui/textarea";
+import { Label } from "@/app/postulations/dashboard/components/ui/label";
 
 interface Props {
   register: any;

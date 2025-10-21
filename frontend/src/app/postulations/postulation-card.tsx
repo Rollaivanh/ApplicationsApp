@@ -1,8 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/postulations/dashboard/components/ui/card";
+import { Button } from "@/app/postulations/dashboard/components/ui/button";
+import { Badge } from "@/app/postulations/dashboard/components/ui/badge";
 import { deletePostulation } from "@/app/postulations/postulations.api";
 import { useRouter } from "next/navigation";
 

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Step1InfoBasica } from "../steps/Step1InfoBasica";
 import { Step2EstadoFecha } from "../steps/Step2EstadoFecha";
 import { Step3InfoExtra } from "../steps/Step3InfoExtra";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/postulations/dashboard/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createPostulation } from "../postulations.api";
 

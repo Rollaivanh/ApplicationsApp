@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/app/postulations/dashboard/components/ui/card";
 import { FormularioPostulacion } from "./postulation-form";
 import { getPostulation } from "../postulations.api";
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/app/postulations/dashboard/components/ui/input";
+import { Label } from "@/app/postulations/dashboard/components/ui/label";
 
 interface Props {
   register: any;
