@@ -9,15 +9,24 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+enum EstadoPostulacion {
+  Enviada
+  Entrevista
+  Oferta
+  Rechazada
+  SinRespuesta
+}
 
-model Postulation {
-id Int @id @default(autoincrement())
-empresa String
-puesto String
-descripcion String?
-link String
-image String?
-interviewAt DateTime? 
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
+model Postulacion {
+  id          Int               @id @default(autoincrement())
+  empresa     String
+  puesto      String
+  descripcion String?
+  notas       String?
+  link        String?
+  imagen      String?
+  fechaEntrevista DateTime?
+  estado      EstadoPostulacion @default(Enviada)
+  creadaEn    DateTime          @default(now())
+  actualizadaEn DateTime        @updatedAt
 }
