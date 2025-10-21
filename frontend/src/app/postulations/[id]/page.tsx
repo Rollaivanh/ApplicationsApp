@@ -1,6 +1,6 @@
 import { getPostulation } from "@/app/postulations/postulations.api";
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { buttonVariants } from "@/app/postulations/dashboard/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/postulations/dashboard/components/ui/card";
 import Link from "next/link";
 
 async function postulationDetail({ params }: { params: { id: string } }) {

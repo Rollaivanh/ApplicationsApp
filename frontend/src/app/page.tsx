@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/app/postulations/dashboard/components/ui/button";
 import { getPostulations } from "../app/postulations/postulations.api";
 import { PostulationCard } from "../app/postulations/postulation-card";
 
