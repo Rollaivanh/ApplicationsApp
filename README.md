@@ -33,7 +33,5 @@ Permite organizar búsquedas de empleo, registrar detalles de cada postulación 
 - Eliminación y edición de postulaciones.  
 - Separación clara entre frontend y backend para un desarrollo escalable.  
 
----
 
-## 🧩 Estructura del proyecto
 
