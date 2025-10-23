@@ -1,35 +1,20 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PostulacionesService } from './postulaciones.service';
-import type { CreatePostulacioneDto } from './dto/create-postulacione.dto';
-import type { UpdatePostulacioneDto } from './dto/update-postulacione.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-@ApiTags('Postulations')
-@Controller('postulations')
+import { CreatePostulacioneDto } from './dto/create-postulacione.dto';
+import { UpdatePostulacioneDto } from './dto/update-postulacione.dto';
+
+@Controller('postulaciones')
 export class PostulacionesController {
   constructor(private readonly postulacionesService: PostulacionesService) {}
 
   @Post()
-  @ApiOperation({ summary: 'New Postulation' })
   create(@Body() createPostulacioneDto: CreatePostulacioneDto) {
     return this.postulacionesService.create(createPostulacioneDto);
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Return all postulations' })
   findAll() {
     return this.postulacionesService.findAll();
-  }
-  @Get('metrics')
-  getMetrics() {
-    return this.postulacionesService.getMetrics();
   }
 
   @Get(':id')
@@ -38,10 +23,7 @@ export class PostulacionesController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updatePostulacioneDto: UpdatePostulacioneDto,
-  ) {
+  update(@Param('id') id: string, @Body() updatePostulacioneDto: UpdatePostulacioneDto) {
     return this.postulacionesService.update(+id, updatePostulacioneDto);
   }
 

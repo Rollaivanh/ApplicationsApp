@@ -1,32 +1,93 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+// -------------------------------------------------------------
+// DATASOURCE Y GENERATOR
+// -------------------------------------------------------------
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+// -------------------------------------------------------------
+// ENUMS
+// -------------------------------------------------------------
+
+// Estado general de la postulación
 enum EstadoPostulacion {
-  Enviada
-  Entrevista
-  Oferta
-  Rechazada
-  SinRespuesta
+  ENVIADA
+  EN_REVISION
+  ENTREVISTA
+  RECHAZADA
+  ACEPTADA
 }
 
+// Tipo de entrevista
+enum TipoEntrevista {
+  RRHH
+  TECNICA
+  CULTURAL
+  FINAL
+  OTRA
+}
+
+// -------------------------------------------------------------
+// MODELOS PRINCIPALES
+// -------------------------------------------------------------
+
+// Usuario que usa la app
+model User {
+  id              Int             @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String          @unique
+  password        String
+  createdAt       DateTime        @default(now())
+  profile         Profile?
+  postulaciones   Postulacion[]
+}
+
+// Postulación a un trabajo
 model Postulacion {
-  id          Int               @id @default(autoincrement())
-  empresa     String
-  puesto      String
-  descripcion String?
-  notas       String?
-  link        String?
-  imagen      String?
-  fechaEntrevista DateTime?
-  estado      EstadoPostulacion @default(Enviada)
-  creadaEn    DateTime          @default(now())
-  actualizadaEn DateTime        @updatedAt
+  id              Int                   @id @default(autoincrement())
+  empresa         String
+  puesto          String
+  estado          EstadoPostulacion     @default(ENVIADA)
+  fuente          String?
+  descripcion     String?
+  notas           String?
+  link            String?
+  imagen          String?
+  fecha           DateTime              @default(now())
+  userId          Int
+  user            User                  @relation(fields: [userId], references: [id])
+  entrevistas     Entrevista[]
+}
+
+// Entrevistas asociadas a una postulación
+model Entrevista {
+  id              Int             @id @default(autoincrement())
+  tipo            TipoEntrevista  @default(OTRA)
+  entrevistador   String?
+  fecha           DateTime?
+  notas           String?
+  numero          Int?
+  postulacionId   Int
+  postulacion     Postulacion     @relation(fields: [postulacionId], references: [id])
+}
+model Profile {
+  id                 Int       @id @default(autoincrement())
+  userId             Int       @unique
+  habilidadesBlandas String[]  // Ej: ["Comunicación", "Liderazgo"]
+  habilidadesTech    String[]  // Ej: ["React", "Node.js", "PostgreSQL"]
+  experiencia        String[]  // Descripciones breves de experiencias previas
+  educacion          String[]  // Títulos o cursos relevantes
+  idiomas            String[]  // Ej: ["Español - Nativo", "Inglés - Intermedio"]
+  certificaciones    String[]  // Ej: ["AWS Certified", "Scrum Master"]
+  intereses          String[]  // Áreas de interés laboral
+  ubicacion          String?
+  disponibilidad     String?   // Ej: "Full-time", "Freelance"
+  linkedin           String?
+  cvUrl              String?
+  portfolioUrl       String?
+  user               User      @relation(fields: [userId], references: [id])
 }
