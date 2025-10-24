@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext"; // 👈 importamos el contexto
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -27,9 +28,11 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <div className="relative flex min-h-screen flex-col">
-          <main className="container mx-auto flex-1">{children}</main>
-        </div>
+        <AuthProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <main className="container mx-auto flex-1">{children}</main>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

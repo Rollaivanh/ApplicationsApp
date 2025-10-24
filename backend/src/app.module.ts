@@ -1,43 +1,45 @@
 import { Module } from '@nestjs/common';
+
+// --- Database ---
 import { PrismaModule } from '../prisma/prisma.module';
 
-// --- Autenticación y usuarios ---
+// --- Authentication & Users ---
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
 
-// --- Postulaciones y entrevistas ---
-import { PostulacionesModule } from './postulaciones/postulaciones.module';
-import { EntrevistasModule } from './entrevistas/entrevistas.module';
+// --- Applications & Interviews ---
+import { ApplicationsModule } from './applications/applications.module';
+import { InterviewsModule } from './interviews/interviews.module';
 
-// --- Métricas y notificaciones ---
+// --- Metrics & Notifications ---
 import { MetricsModule } from './metrics/metrics.module';
-import { NotificacionesModule } from './notificaciones/notificaciones.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
-// --- Integraciones externas ---
-import { RetellModule } from './retell/retell.module';
+// --- External Integrations ---
+import { ElevenLabsModule } from './eleven-labs/eleven-labs.module';
 import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    // --- Base de datos ---
+    // --- Database ---
     PrismaModule,
 
-    // --- Autenticación y usuarios ---
+    // --- Authentication & Users ---
     AuthModule,
     UsersModule,
     ProfilesModule,
 
-    // --- Postulaciones y entrevistas ---
-    PostulacionesModule,
-    EntrevistasModule,
+    // --- Applications & Interviews ---
+    ApplicationsModule,
+    InterviewsModule,
 
-    // --- Métricas y notificaciones ---
+    // --- Metrics & Notifications ---
     MetricsModule,
-    NotificacionesModule,
+    NotificationsModule,
 
-    // --- Integraciones externas ---
-    RetellModule,
+    // --- External Integrations ---
+    ElevenLabsModule,
     MailModule,
   ],
   controllers: [],

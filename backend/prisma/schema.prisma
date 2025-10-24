@@ -1,40 +1,42 @@
 // -------------------------------------------------------------
-// DATASOURCE Y GENERATOR
+// DATASOURCE & GENERATOR
 // -------------------------------------------------------------
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 // -------------------------------------------------------------
 // ENUMS
 // -------------------------------------------------------------
 
-// Estado general de la postulación
-enum EstadoPostulacion {
-  ENVIADA
-  EN_REVISION
-  ENTREVISTA
-  RECHAZADA
-  ACEPTADA
+// General status of a job application
+enum ApplicationStatus {
+  SENT
+  UNDER_REVIEW
+  INTERVIEW
+  REJECTED
+  ACCEPTED
 }
 
-// Tipo de entrevista
-enum TipoEntrevista {
-  RRHH
-  TECNICA
+// Type of interview
+enum InterviewType {
+  HR
+  TECHNICAL
   CULTURAL
   FINAL
-  OTRA
+  OTHER
 }
 
 // -------------------------------------------------------------
-// MODELOS PRINCIPALES
+// MAIN MODELS
 // -------------------------------------------------------------
 
-// Usuario que usa la app
+// User of the platform
 model User {
   id              Int             @id @default(autoincrement())
   firstName       String
@@ -42,52 +44,90 @@ model User {
   email           String          @unique
   password        String
   createdAt       DateTime        @default(now())
+
+  // Relations
   profile         Profile?
-  postulaciones   Postulacion[]
+  applications    Application[]   @relation("UserApplications")
+  voiceSessions   VoiceSession[]  @relation("UserVoiceSessions")
+
+  @@map("users")
 }
 
-// Postulación a un trabajo
-model Postulacion {
-  id              Int                   @id @default(autoincrement())
-  empresa         String
-  puesto          String
-  estado          EstadoPostulacion     @default(ENVIADA)
-  fuente          String?
-  descripcion     String?
-  notas           String?
-  link            String?
-  imagen          String?
-  fecha           DateTime              @default(now())
-  userId          Int
-  user            User                  @relation(fields: [userId], references: [id])
-  entrevistas     Entrevista[]
-}
-
-// Entrevistas asociadas a una postulación
-model Entrevista {
-  id              Int             @id @default(autoincrement())
-  tipo            TipoEntrevista  @default(OTRA)
-  entrevistador   String?
-  fecha           DateTime?
-  notas           String?
-  numero          Int?
-  postulacionId   Int
-  postulacion     Postulacion     @relation(fields: [postulacionId], references: [id])
-}
+// Professional profile of the user
 model Profile {
-  id                 Int       @id @default(autoincrement())
-  userId             Int       @unique
-  habilidadesBlandas String[]  // Ej: ["Comunicación", "Liderazgo"]
-  habilidadesTech    String[]  // Ej: ["React", "Node.js", "PostgreSQL"]
-  experiencia        String[]  // Descripciones breves de experiencias previas
-  educacion          String[]  // Títulos o cursos relevantes
-  idiomas            String[]  // Ej: ["Español - Nativo", "Inglés - Intermedio"]
-  certificaciones    String[]  // Ej: ["AWS Certified", "Scrum Master"]
-  intereses          String[]  // Áreas de interés laboral
-  ubicacion          String?
-  disponibilidad     String?   // Ej: "Full-time", "Freelance"
-  linkedin           String?
-  cvUrl              String?
-  portfolioUrl       String?
-  user               User      @relation(fields: [userId], references: [id])
+  id                  Int        @id @default(autoincrement())
+  userId              Int        @unique
+  softSkills          String[]   // e.g. ["Communication", "Leadership"]
+  technicalSkills     String[]   // e.g. ["React", "Node.js", "PostgreSQL"]
+  experience          String[]   // brief descriptions
+  education           String[]
+  languages           String[]
+  certifications      String[]
+  interests           String[]
+  location            String
+  availability        String?    // e.g. "Full-time", "Freelance"
+  linkedin            String?
+  cvUrl               String?
+  portfolioUrl        String?
+
+  user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// Job application
+model Application {
+  id              Int                   @id @default(autoincrement())
+  company         String
+  position        String
+  status          ApplicationStatus      @default(SENT)
+  source          String?
+  description     String?
+  notes           String?
+  link            String?
+  image           String?
+  createdAt       DateTime               @default(now())
+
+  userId          Int
+  user            User                   @relation("UserApplications", fields: [userId], references: [id], onDelete: Cascade)
+
+  interviews      Interview[]            @relation("ApplicationInterviews")
+
+  @@map("applications")
+}
+
+// Interviews linked to a job application
+model Interview {
+  id              Int              @id @default(autoincrement())
+  type            InterviewType    @default(OTHER)
+  interviewer     String?
+  date            DateTime?
+  notes           String?
+  number          Int?
+
+  applicationId   Int
+  application     Application      @relation("ApplicationInterviews", fields: [applicationId], references: [id], onDelete: Cascade)
+
+  voiceSessions   VoiceSession[]   @relation("InterviewVoiceSessions")
+
+  @@map("interviews")
+}
+
+// Voice sessions generated (ElevenLabs, OpenAI TTS, Google TTS, etc.)
+model VoiceSession {
+  id              Int          @id @default(autoincrement())
+  text            String       // original text sent to TTS
+  audioUrl        String?      // file path or URL of the generated audio
+  provider        String?      // e.g. "ElevenLabs", "OpenAI", "GoogleTTS"
+  durationSeconds Int?
+  createdAt       DateTime     @default(now())
+
+  // Relations
+  userId          Int
+  user            User         @relation("UserVoiceSessions", fields: [userId], references: [id], onDelete: Cascade)
+
+  interviewId     Int?
+  interview       Interview?   @relation("InterviewVoiceSessions", fields: [interviewId], references: [id], onDelete: Cascade)
+
+  @@map("voice_sessions")
 }
